@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>เอกสาร</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:'Prompt',sans-serif;color:#fff;min-height:100vh;background:linear-gradient(160deg,#0b3d91 0%,#1456c4 50%,#0a2e75 100%) fixed;position:relative;overflow-x:hidden}
+.deco{position:fixed;inset:0;pointer-events:none;z-index:0}
+.cloud{position:absolute;background:#fff;opacity:.08;border-radius:50px;filter:blur(6px)}
+.cloud:before,.cloud:after{content:"";position:absolute;background:#fff;border-radius:50%}
+.cloud:before{width:55%;height:160%;left:12%;top:-70%}
+.cloud:after{width:40%;height:130%;right:12%;top:-50%}
+.star{position:absolute;color:#ffd84a;opacity:.2}
+main{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:24px;margin:8px 0 18px}
+section{display:none}section.on{display:block}
+.card{background:rgba(255,255,255,.1);border-radius:14px;padding:14px;margin-bottom:14px}
+.card h2{font-size:17px;margin:0 0 10px}
+.opt{display:flex;align-items:center;gap:10px;background:#fff;color:#0a2e75;border:2px solid #fff;border-radius:12px;padding:12px 14px;margin-bottom:8px;min-height:50px;font-size:17px;cursor:pointer}
+.opt input{width:22px;height:22px;accent-color:#0955b4;flex:none}
+label.f{display:block;font-size:15px;margin:10px 0 4px}
+input[type=text],input[type=tel],input[type=date],input[type=number],textarea{width:100%;font:inherit;font-size:17px;padding:12px;border:2px solid #fff;border-radius:10px;background:#fff;color:#0a2e75;min-height:48px}
+textarea{min-height:90px}
+.sub{margin-top:8px;display:none}.sub.on{display:block}
+.btns{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+button{font:inherit;font-size:17px;font-weight:600;min-height:52px;padding:0 18px;border-radius:12px;border:2px solid #fff;background:transparent;color:#fff;cursor:pointer;flex:1}
+button.p{background:#fff;color:#0955b4}
+button.big{flex:1 1 100%;min-height:64px;font-size:20px}
+.it{background:#fff;color:#0a2e75;border-radius:12px;padding:10px;margin-bottom:10px}
+.it .h{display:flex;justify-content:space-between;align-items:center;font-weight:600;margin-bottom:6px}
+.it .h button{min-height:40px;flex:none;color:#c0392b;border-color:#c0392b;font-size:15px}
+.it .g{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.it .g div{font-size:13px}
+.it input{border-color:#9db8e6;padding:8px;min-height:44px;font-size:16px}
+.rt{font-weight:600;padding-top:6px;font-size:16px;word-break:break-all}
+.sum{background:#fff;color:#0a2e75;border-radius:12px;padding:12px;margin-top:10px}
+.sum div{display:flex;justify-content:space-between;padding:3px 0}
+.sum .t{font-weight:700;border-top:2px solid #0955b4;margin-top:6px;padding-top:8px;font-size:18px}
+.pw{margin-bottom:14px;box-shadow:0 2px 12px rgba(0,0,0,.35);background:#fff;overflow:hidden}
+.pw>div{transform-origin:0 0}
+/* PDF page, 920x1301 px (A4 ratio) */
+.pg{position:relative;width:920px;height:1301px;background:#fff;color:#0955b4;font-family:'Prompt',sans-serif;font-size:19px;overflow:hidden}
+.pg .a{position:absolute;white-space:nowrap;line-height:1;transform:translateY(-50%)}
+.pg .r{transform:translate(-100%,-50%)}
+.pg .c{transform:translate(-50%,-50%)}
+.pg .b{font-weight:600}
+.pg .bx{position:absolute}
+#cap{position:absolute;left:-99999px;top:0}
+</style>
+</head>
+<body>
+<div class="deco" id="deco"></div>
+<main>
+
+<section id="s1" class="on">
+<h1>รายละเอียดเอกสาร</h1>
+<div class="card"><h2>ประเภทเอกสาร</h2>
+<label class="opt"><input type="radio" name="type" value="ใบเสนอราคา" checked>ใบเสนอราคา</label>
+<label class="opt"><input type="radio" name="type" value="บิลส่งของ">บิลส่งของ</label>
+<label class="opt"><input type="radio" name="type" value="บิลเงินสด">บิลเงินสด</label></div>
+<div class="card"><h2>วันที่เอกสาร</h2>
+<label class="opt"><input type="radio" name="dm" value="pick" checked>เลือกวันที่</label>
+<label class="opt"><input type="radio" name="dm" value="none">ไม่มีวันที่</label>
+<div class="sub on" id="dateBox"><input type="date" id="date"></div></div>
+<div class="card"><h2>ช่องทางการชำระเงิน</h2>
+<label class="opt"><input type="radio" name="pm" value="yes">เพิ่มช่องทางการชำระเงิน</label>
+<label class="opt"><input type="radio" name="pm" value="no" checked>ไม่มีช่องทางการชำระเงิน</label>
+<div class="sub" id="payBox">
+<label class="f">ชื่อบัญชี</label><input type="text" id="accName">
+<label class="f">ธนาคาร</label><input type="text" id="bank">
+<label class="f">เลขที่บัญชี</label><input type="text" id="accNo" inputmode="numeric"></div></div>
+<div class="card"><h2>ผู้ลงนาม</h2>
+<label class="f">ชื่อผู้ลงนาม</label><input type="text" id="signer">
+<label class="f">ตำแหน่ง</label><input type="text" id="pos"></div>
+<div class="btns"><button onclick="resetAll()">รีเซ็ต</button><button class="p" onclick="go(2)">ไปหน้าถัดไป</button></div>
+</section>
+
+<section id="s2">
+<h1>รายละเอียดลูกค้า</h1>
+<div class="card">
+<label class="f">ชื่อลูกค้า</label><input type="text" id="cName">
+<label class="f">โทรศัพท์</label><input type="tel" id="phone">
+<label class="f">ที่อยู่</label><textarea id="addr"></textarea>
+<label class="f">เรื่อง</label><input type="text" id="subject"></div>
+<div class="btns"><button onclick="go(1)">ย้อนกลับ</button><button class="p" onclick="go(3)">ไปหน้าถัดไป</button></div>
+</section>
+
+<section id="s3">
+<h1>รายละเอียดสินค้า</h1>
+<div id="items"></div>
+<button class="p" style="width:100%" onclick="addItem()">+ เพิ่มรายการสินค้า</button>
+<div class="card" style="margin-top:14px"><h2>ภาษีมูลค่าเพิ่ม</h2>
+<label class="opt"><input type="checkbox" id="vatOn">ภาษีมูลค่าเพิ่ม</label>
+<div class="sub" id="vatBox">
+<label class="opt"><input type="radio" name="rate" value="7" checked>7%</label>
+<label class="opt"><input type="radio" name="rate" value="10">10%</label></div></div>
+<div class="card"><h2>ส่วนลด</h2>
+<label class="opt"><input type="checkbox" id="dOn">ส่วนลด</label>
+<div class="sub" id="dBox">
+<label class="opt"><input type="radio" name="dmode" value="pct" checked>เปอร์เซ็นต์</label>
+<label class="opt"><input type="radio" name="dmode" value="amt">จำนวนเงิน</label>
+<div id="dPct"><label class="f">ส่วนลด (%)</label><input type="number" id="dp" inputmode="decimal" min="0" step="any"></div>
+<div id="dAmt" style="display:none"><label class="f">ส่วนลด (บาท)</label><input type="number" id="da" inputmode="decimal" min="0" step="any"></div></div></div>
+<div class="sum" id="sum"></div>
+<div class="btns"><button onclick="go(2)">ย้อนกลับ</button><button class="p" onclick="go(4)">ไปหน้าถัดไป</button></div>
+</section>
+
+<section id="s4">
+<h1>ตัวอย่างเอกสาร</h1>
+<div id="prev"></div>
+<div class="btns">
+<button class="p big" id="dl" onclick="download()">ดาวน์โหลด PDF</button>
+<button onclick="go(3)">ย้อนกลับ</button>
+<button onclick="resetAll()">รีเซ็ต</button>
+<button onclick="share()">แชร์</button></div>
+<p id="msg" style="min-height:22px"></p>
+</section>
+</main>
+<div id="cap"></div>
+
+<script>
+const $=id=>document.getElementById(id);
+const rv=n=>document.querySelector('input[name='+n+']:checked').value;
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt=n=>n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const r2=n=>Math.round((n+Number.EPSILON)*100)/100;
+
+// decoration
+(function(){let h='';
+[[5,8,150,34],[60,22,190,40],[15,55,170,36],[65,75,200,42],[30,90,160,34]].forEach(c=>h+=`<div class="cloud" style="left:${c[0]}%;top:${c[1]}%;width:${c[2]}px;height:${c[3]}px"></div>`);
+[[85,6,22],[8,30,16],[90,40,18],[20,68,20],[75,88,16],[50,14,14]].forEach(s=>h+=`<div class="star" style="left:${s[0]}%;top:${s[1]}%;font-size:${s[2]}px">★</div>`);
+$('deco').innerHTML=h})();
+
+// navigation
+function go(n){document.querySelectorAll('section').forEach((s,i)=>s.classList.toggle('on',i==n-1));
+ if(n==4)renderPreview();scrollTo(0,0)}
+function resetAll(){if(confirm('ต้องการล้างข้อมูลทั้งหมดหรือไม่?')&&confirm('ยืนยันอีกครั้ง: ข้อมูลที่กรอกทั้งหมดจะถูกล้างและกู้คืนไม่ได้'))location.reload()}
+
+// toggles
+document.querySelectorAll('input[name=dm]').forEach(e=>e.onchange=()=>$('dateBox').classList.toggle('on',rv('dm')=='pick'));
+document.querySelectorAll('input[name=pm]').forEach(e=>e.onchange=()=>$('payBox').classList.toggle('on',rv('pm')=='yes'));
+$('vatOn').onchange=()=>{$('vatBox').classList.toggle('on',$('vatOn').checked);calc()};
+$('dOn').onchange=()=>{$('dBox').classList.toggle('on',$('dOn').checked);calc()};
+document.querySelectorAll('input[name=dmode]').forEach(e=>e.onchange=()=>{$('dPct').style.display=rv('dmode')=='pct'?'':'none';$('dAmt').style.display=rv('dmode')=='amt'?'':'none';calc()});
+document.querySelectorAll('input[name=rate]').forEach(e=>e.onchange=calc);
+$('dp').oninput=calc;$('da').oninput=calc;
+
+// items
+function addItem(){const d=document.createElement('div');d.className='it';
+ d.innerHTML=`<div class="h"><span>ลำดับ <b class="no"></b></span><button type="button">ลบ</button></div>
+ <label style="font-size:13px">รายการสินค้า</label><input type="text" class="nm" style="margin-bottom:6px">
+ <div class="g"><div>จำนวน<input type="number" class="q" inputmode="decimal" min="0" step="any"></div>
+ <div>ราคา/หน่วย<input type="number" class="p" inputmode="decimal" min="0" step="any"></div>
+ <div>ราคารวม<div class="rt">0.00</div></div></div>`;
+ d.querySelector('button').onclick=()=>{d.remove();if(!document.querySelector('.it'))addItem();number();calc()};
+ d.querySelectorAll('.q,.p').forEach(i=>i.oninput=calc);
+ $('items').appendChild(d);number();calc()}
+function number(){document.querySelectorAll('.it .no').forEach((e,i)=>e.textContent=i+1)}
+function getItems(){return [...document.querySelectorAll('.it')].map(d=>{const q=parseFloat(d.querySelector('.q').value)||0,p=parseFloat(d.querySelector('.p').value)||0;
+ return{name:d.querySelector('.nm').value,qty:d.querySelector('.q').value,price:p,hasP:d.querySelector('.p').value!=='',total:r2(q*p),el:d}})}
+function calc(){const it=getItems();it.forEach(x=>x.el.querySelector('.rt').textContent=fmt(x.total));
+ const sub=r2(it.reduce((a,x)=>a+x.total,0));let disc=0;
+ if($('dOn').checked){disc=rv('dmode')=='pct'?r2(sub*(parseFloat($('dp').value)||0)/100):(parseFloat($('da').value)||0);disc=Math.min(Math.max(disc,0),sub)}
+ const base=r2(sub-disc),rate=$('vatOn').checked?+rv('rate'):0,vat=r2(base*rate/100),total=r2(base+vat);
+ $('sum').innerHTML=`<div><span>ราคารวมสินค้า</span><span>${fmt(sub)}</span></div>
+ <div><span>ส่วนลด</span><span>${fmt(disc)}</span></div>
+ <div><span>ภาษีมูลค่าเพิ่ม${rate?' ('+rate+'%)':''}</span><span>${fmt(vat)}</span></div>
+ <div class="t"><span>ยอดสุทธิ</span><span>${fmt(total)}</span></div>`;
+ return{it,sub,disc,vat,rate,total}}
+
+// Thai baht text
+function th(s){const d=['ศูนย์','หนึ่ง','สอง','สาม','สี่','ห้า','หก','เจ็ด','แปด','เก้า'],u=['','สิบ','ร้อย','พัน','หมื่น','แสน'];
+ if(s.length>6)return th(s.slice(0,-6))+'ล้าน'+th(s.slice(-6));
+ let r='';const L=s.length;
+ for(let i=0;i<L;i++){const x=+s[i],p=L-i-1;if(!x)continue;
+  if(p==0&&x==1&&L>1)r+='เอ็ด';else if(p==1&&x==2)r+='ยี่สิบ';else if(p==1&&x==1)r+='สิบ';else r+=d[x]+u[p]}
+ return r}
+function bahtText(n){const [b,s]=r2(n).toFixed(2).split('.');
+ return '('+(+b?th(String(+b)):'ศูนย์')+'บาท'+(+s?th(String(+s))+'สตางค์':'ถ้วน')+')'}
+function thDate(v){if(!v)return '';const m=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+ const [y,mo,d]=v.split('-').map(Number);return d+' '+m[mo-1]+' '+(y+543)}
+
+// PDF page markup (coordinates taken from the original PDF, 920x1301 px)
+const PER=6,RH=45.8;
+function pagesHTML(){const c=calc(),items=c.it,pages=Math.max(1,Math.ceil(items.length/PER));let out='';
+ const A=(x,y,t,cls='',st='')=>`<div class="a ${cls}" style="left:${x}px;top:${y}px;${st}">${esc(t)}</div>`;
+ const type=rv('type'),pay=rv('pm')=='yes';
+ for(let p=0;p<pages;p++){const last=p==pages-1;let h=`<div class="pg"><div class="bx" style="left:0;top:0;width:23px;height:135px;background:#0955b4"></div>
+ <div class="a b" style="left:67px;top:100px;font-size:50px;font-weight:700">${esc(type)}</div>
+ <div class="bx" style="left:67px;top:134px;width:792px;height:1.5px;background:#0955b4"></div>`;
+ h+=A(67,183,'ข้อมูลลูกค้า','b','font-size:21px');
+ const rows=[['วันที่',rv('dm')=='pick'?thDate($('date').value):''],['ชื่อลูกค้า',$('cName').value],['โทรศัพท์',$('phone').value],['ที่อยู่',$('addr').value.replace(/\s*\n\s*/g,' ')],['เรื่อง',$('subject').value]];
+ rows.forEach((r,i)=>{const y=[216,247,278,309,342][i];h+=A(67,y,r[0])+A(153,y,':')+A(176,y,r[1])});
+ h+=`<div class="bx" style="left:67px;top:430px;width:793px;height:48px;background:#0955b4"></div>`;
+ [['ลำดับ',122,'c'],['รายการสินค้า',201,''],['จำนวน',523,'c'],['ราคา/หน่วย',684,'r'],['ราคารวม',834,'r']].forEach(k=>h+=`<div class="a ${k[2]}" style="left:${k[1]}px;top:455px;color:#fff">${k[0]}</div>`);
+ for(let i=0;i<PER;i++){const top=478+RH*i,y=top+RH/2;
+  h+=`<div class="bx" style="left:67px;top:${top}px;width:793px;height:${RH}px;background:${i%2?'#e1edfd':'#fff'}"></div>`;
+  const it=items[p*PER+i];
+  if(it&&(it.name||it.qty!==''||it.hasP)){h+=A(122,y,p*PER+i+1,'c')+A(201,y,it.name)+A(523,y,it.qty,'c')+A(684,y,fmt(it.price)+'-','r')+A(834,y,fmt(it.total)+'-','r')}
+  else if(it){h+=A(122,y,p*PER+i+1,'c')}}
+ if(last){
+  h+=A(545,787,'ราคารวม')+A(703,787,':','c')+A(834,787,fmt(c.sub)+'.-','r');
+  h+=A(545,822,'ภาษีมูลค่าเพิ่ม'+(c.rate?' ('+c.rate+'%)':''))+A(703,822,':','c')+A(834,822,fmt(c.vat)+'.-','r');
+  h+=A(545,858,'ส่วนลด')+A(703,858,':','c')+A(834,858,fmt(c.disc)+'.-','r');
+  h+=`<div class="bx" style="left:518px;top:888px;width:342px;height:48px;background:#0955b4"></div>
+  <div class="a b" style="left:545px;top:912px;color:#fff;font-size:20px">ราคารวมทั้งหมด</div><div class="a b" style="left:703px;top:912px;color:#fff;font-size:20px;transform:translate(-50%,-50%)">:</div><div class="a r b" style="left:834px;top:912px;color:#fff;font-size:20px">${fmt(c.total)}.-</div>`;
+  h+=A(856,965,bahtText(c.total),'r');
+  if(pay){h+=A(67,912,'ช่องทางการชำระเงิน','b','font-size:21px')+A(67,948,'ชื่อบัญชี : '+$('accName').value)+A(67,980,'ธนาคาร : '+$('bank').value)+A(67,1012,'เลขที่บัญชี : '+$('accNo').value)}
+  h+=A(67,1110,'-ขอบคุณ / Thank You-');
+  h+=`<div class="bx" style="left:518px;top:1188px;width:341px;height:1.5px;background:#0955b4"></div>`;
+  const sg=$('signer').value.trim();
+  h+=A(688,1219,sg?'('+sg+')':'','c')+A(688,1250,$('pos').value,'c')}
+ out+=h+'</div>'}
+ return out}
+
+function renderPreview(){const box=$('prev');box.innerHTML='';
+ const tmp=document.createElement('div');tmp.innerHTML=pagesHTML();
+ const w=box.clientWidth,s=w/920;
+ [...tmp.children].forEach(pg=>{const wrap=document.createElement('div');wrap.className='pw';wrap.style.height=(1301*s)+'px';
+  pg.style.transform='scale('+s+')';pg.style.transformOrigin='0 0';wrap.appendChild(pg);box.appendChild(wrap)})}
+
+async function buildPdf(){
+ if(!window.html2canvas||!window.jspdf)throw new Error('lib');
+ await document.fonts.ready;
+ const cap=$('cap');cap.innerHTML=pagesHTML();
+ const {jsPDF}=window.jspdf,doc=new jsPDF({unit:'mm',format:'a4',orientation:'portrait'});
+ const pgs=[...cap.children];
+ for(let i=0;i<pgs.length;i++){const cv=await html2canvas(pgs[i],{scale:2,backgroundColor:'#fff',useCORS:true});
+  if(i)doc.addPage();doc.addImage(cv.toDataURL('image/jpeg',.95),'JPEG',0,0,210,297)}
+ cap.innerHTML='';return doc}
+const fname=()=>rv('type')+'.pdf';
+function say(t){$('msg').textContent=t}
+async function download(){say('กำลังสร้าง PDF...');try{const d=await buildPdf();d.save(fname());say('')}catch(e){say('สร้าง PDF ไม่สำเร็จ กรุณาตรวจสอบอินเทอร์เน็ตแล้วลองใหม่')}}
+async function share(){
+ if(!navigator.share){say('อุปกรณ์หรือเบราว์เซอร์นี้ไม่รองรับการแชร์ กรุณาใช้ปุ่มดาวน์โหลด PDF');return}
+ say('กำลังสร้าง PDF...');
+ try{const d=await buildPdf(),f=new File([d.output('blob')],fname(),{type:'application/pdf'});
+  if(!(navigator.canShare&&navigator.canShare({files:[f]}))){say('อุปกรณ์นี้ไม่รองรับการแชร์ไฟล์ PDF กรุณาใช้ปุ่มดาวน์โหลด PDF');return}
+  await navigator.share({files:[f],title:rv('type')});say('')}
+ catch(e){say(e&&e.name=='AbortError'?'':'แชร์ไม่สำเร็จ กรุณาใช้ปุ่มดาวน์โหลด PDF')}}
+
+addItem();
+</script>
+</body>
+</html>
